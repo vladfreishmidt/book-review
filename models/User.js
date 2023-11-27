@@ -76,4 +76,21 @@ User.prototype.register = function () {
   }
 };
 
+// Login
+User.prototype.login = function () {
+  return new Promise(async (resolve, reject) => {
+    this.cleanUp();
+
+    const attemptedUser = await usersCollection.findOne({
+      username: this.data.username,
+    });
+
+    if (attemptedUser && attemptedUser.password === this.data.password) {
+      resolve("Congrats");
+    } else {
+      reject("Invalid username / password");
+    }
+  });
+};
+
 module.exports = User;
