@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const usersCollection = require("../db").collection("users");
+const usersCollection = require("../db").db().collection("users");
 const validator = require("validator");
 
 let User = function (data) {
@@ -28,6 +28,7 @@ User.prototype.cleanUp = function () {
   };
 };
 
+// Validations
 User.prototype.validate = function () {
   if (this.data.username === "") {
     this.errors.push("You must provide a username.");

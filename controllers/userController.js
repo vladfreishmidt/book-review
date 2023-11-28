@@ -17,14 +17,29 @@ exports.login = async function (req, res) {
   user
     .login()
     .then(function (result) {
-      res.send(result);
+      req.session.user = { username: user.data.username };
+      req.session.save(function () {
+        res.redirect("/");
+      });
     })
     .catch(function (error) {
-      res.send(error);
+      req.flash("errors", error);
+      req.session.save(function () {
+        res.redirect("/");
+      });
     });
 };
-exports.logout = function () {};
 
 exports.home = function (req, res) {
-  res.render("home-guest");
+  if (req.session.user) {
+    res.render("home-dashboard", { username: req.session.user.username });
+  } else {
+    res.render("home-guest", { errors: req.flash("errors") });
+  }
+};
+
+exports.logout = function (req, res) {
+  req.session.destroy(function () {
+    res.redirect("/");
+  });
 };
