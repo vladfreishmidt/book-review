@@ -6,7 +6,7 @@ exports.register = async function (req, res) {
   user
     .register()
     .then(() => {
-      req.session.user = { username: user.data.username };
+      req.session.user = { avatar: user.avatar, username: user.data.username };
       req.session.save(function () {
         res.redirect("/");
       });
@@ -26,7 +26,7 @@ exports.login = async function (req, res) {
   user
     .login()
     .then(function (result) {
-      req.session.user = { username: user.data.username };
+      req.session.user = { avatar: user.avatar, username: user.data.username };
       req.session.save(function () {
         res.redirect("/");
       });
@@ -41,7 +41,10 @@ exports.login = async function (req, res) {
 
 exports.home = function (req, res) {
   if (req.session.user) {
-    res.render("home-dashboard", { username: req.session.user.username });
+    res.render("home-dashboard", {
+      avatar: req.session.user.avatar,
+      username: req.session.user.username,
+    });
   } else {
     res.render("home-guest", {
       errors: req.flash("errors"),
